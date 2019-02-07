@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import Nav from './components/Nav';
 import Category from './components/Category';
+import Cart from './components/Cart';
 
 
 
@@ -12,8 +13,11 @@ class App extends Component {
     this.state = {
       categories: [],
       currentCategory: null,
-      activeNave: "clothes" , 
-      navs: [ "Clothes" , "Bags" , "Shoes" , "Accessories"]
+      activeNav: "clothes" , 
+      categoryType: [], 
+      navs: ["home"],
+      cart: [],
+      showCart: false
     };
   }
 
@@ -30,6 +34,13 @@ class App extends Component {
           categories: data
         })
 
+        let navs = this.state.categories.map( category => {
+          return category.name
+        })
+
+        this.setState({ navs: this.state.navs.concat(navs)})
+  
+
       })
       .catch( error => {
         console.log(error)
@@ -37,47 +48,85 @@ class App extends Component {
   }
 
 
-  renderCategory(allCategory){
+  setCurrentCategory(category) {
 
-    return allCategory.map((categories) => {
-      return (
-     
-        <Category key={categories.id}
-          categories={categories}
-          setCurrentCategory={this.setCurrentCategory.bind(this)}/>
-          
-      )
-    })
+    console.log(category) 
+    console.log('fetching data');
+
+    const url = `http://localhost:3000/categories/${category.id}/types`
+
+    fetch(url)
+      .then( response => response.json())
+      .then( categoryType => {
+        console.log(categoryType);
+ 
+        this.setState({
+          categoryType, currentCategory: category
+        })
+      })
+      .catch( error => {
+        console.log(error)
+      })
+
   }
 
-  setCurrentCategory(Category) {
+  onNavClick = (activeNav) => {
+      console.log("you clicked on " , activeNav)
+
+      this.setState({activeNav, showCart: false})
+
+       let currentCategory = this.state.categories.filter( category => {
+         if( activeNav=== category.name.toLowerCase()){
+         return category
+         }
+       })
+
+       if(currentCategory.length > 0 )
+       this.setCurrentCategory(currentCategory[0])
+      
+  }
+
+
+
+  addToCart(product){
+    const addToCart = this.state.cart.concat([product]);
     this.setState({
-      currentCategory: Category,
-      // currentCategory: name
+      cart: addToCart
     })
   }
 
-
-  onNavClick = (activeNave) => {
-      console.log("you clicked on " , activeNave)
-      this.setState({activeNave})
-  }
+  toggleCart(){
+    this.setState({
+    showCart: !this.state.showCart
+  })
+ 
+}
 
   render() {
     return (
       <div>
+        <Nav navs= {this.state.navs} onNavClick={this.onNavClick} active={this.state.activeNav} showCart={this.toggleCart.bind(this)}/>
+     {this.state.showCart ?
+        <Cart items={this.state.cart} /> : (<div className="container mt-5">
+        {this.state.activeNave === "clothes" ? "this is the clothing page" : ""}
+        {this.state.activeNave === "bags" ? "this is the Bags page" : ""}
 
-        <Nav navs= {this.state.navs} onNavClick={this.onNavClick}/>
-        <div className="container mt-5">
-          {this.state.activeNave === "clothes" ? "this is the clothing page" : ""}
-          {this.state.activeNave === "bags" ? "this is the Bags page" : ""}
+        {this.state.activeNave === "shoes" ? "this is the Shoes page" : ""}
+        {this.state.activeNave === "accessories" ? "this is the Accessories page" : ""}
 
-          {this.state.activeNave === "shoes" ? "this is the Shoes page" : ""}
-          {this.state.activeNave === "accessories" ? "this is the Accessories page" : ""}
 
-        </div>
+        {this.state.categoryType != null ? <Category addToCart={this.addToCart.bind(this)} categoryType={this.state.categoryType} /> : "" }
+        
 
-        <h1> {this.renderCategory(this.state.categories)} </h1>
+      </div> )  }
+
+
+
+      {/* <div className="sara">
+      <p> New Collections</p> */}
+      {/* <img src="https://cdn-static.farfetch-contents.com/Content/UP/people_page/2018/06/bags-ww/1-lg.jpg"   width="auto" height="550" alt="shoes"></img> */}
+  
+      {/* </div> */}
                 {/* <div className="topnav"> */}
                   {/* <a className="active" href="#clothes" onClick={this.state.categories}> Clothes</a> */}
                 {/* <a href="#Bags" onClick=''>Bags</a>

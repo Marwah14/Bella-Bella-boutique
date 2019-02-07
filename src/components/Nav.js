@@ -7,6 +7,9 @@ class Nav extends Component {
     super();
     this.state = {};
   }
+
+
+
   renderNavs() {
     return this.props.navs.map(( nav, index) => {
 
@@ -15,13 +18,16 @@ class Nav extends Component {
 
       return (
         <li className={style} key={index}>
-          <a
+          <div
             className="nav-link"
             onClick={() => this.props.onNavClick(nav.toLowerCase())}
           >
             {nav}
             {isActive ? <span className="sr-only">(current)</span> : ""}
-          </a>
+            <div>
+                
+            </div>
+          </div>
         </li>
       );
     });
@@ -31,17 +37,25 @@ class Nav extends Component {
 
   render() {
     return (
-    <nav className="navbar navbar-expand-lg navbar-light bg-light">
-        <a className="navbar-brand" href="#"> Kathreen </a>
+        <div>
+    <nav className="navbar navbar-expand-lg navbar-light ">
+        <div className="navbar-brand" > 
+        <img src="https://cdn10.bigcommerce.com/s-yhnrk5tq77/product_images/website_logo_1_1478206132__65915.jpg" width="auto" height="100"></img> </div>
         <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
           <span className="navbar-toggler-icon"></span>
         </button>
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav">
                 {this.renderNavs()}
+
           </ul>
+          <div>
+          <button type="button" className="btn btn-cart cartbutton float-left" onClick={this.props.showCart}>Cart</button>
+          </div>
         </div>
       </nav>
+     
+      </div>
     );
   }
 }

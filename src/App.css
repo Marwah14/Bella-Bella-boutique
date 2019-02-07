@@ -20,3 +20,25 @@
     background-color: #FFB6C1;
     color: white;
   }
+  .navbar {
+    background-color: #CAB7C9;
+  }
+
+  .product img {
+    width: auto; 
+    height: 290px;
+  }
+  .item img {
+    width: auto; 
+    height: 250px; ;
+  }
+  .with {
+    font-family: 'Times New Roman', Times, serif;
+  } 
+  .cartbutton {
+    float: left;
+  }
+ .sara {
+  float: left;
+
+ }
